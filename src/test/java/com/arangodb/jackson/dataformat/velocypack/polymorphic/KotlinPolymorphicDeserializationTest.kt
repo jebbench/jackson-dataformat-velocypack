@@ -41,8 +41,8 @@ class KotlinPolymorphicDeserializationTest {
 
         val container = ContainerKt(
                 attributes = mapOf(
-                        "FirstType" to PolyTypeKt.FirstTypeKt(key = "FirstType", value = "FirstType"),
-                        "SecondType" to PolyTypeKt.SecondTypeKt(key = "SecondType", value = "SecondType")
+                        "FirstType" to PolyTypeKt.FirstTypeKt(key = "FirstType", value = "FirstType", type = "FirstTypeKt"),
+                        "SecondType" to PolyTypeKt.SecondTypeKt(key = "SecondType", value = "SecondType", type = "SecondTypeKt")
                 ),
                 text = listOf("a", "b")
         )
@@ -71,7 +71,7 @@ data class ContainerKt(
         val text: List<String>
 )
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type")
 @JsonSubTypes(
         JsonSubTypes.Type(name = "FirstTypeKt", value = PolyTypeKt.FirstTypeKt::class),
         JsonSubTypes.Type(name = "SecondTypeKt", value = PolyTypeKt.SecondTypeKt::class)
@@ -79,11 +79,13 @@ data class ContainerKt(
 sealed class PolyTypeKt {
     data class FirstTypeKt(
             val key: String,
-            val value: String
+            val value: String,
+            val type: String
     ) : PolyTypeKt()
 
     data class SecondTypeKt(
             val key: String,
-            val value: String
+            val value: String,
+            val type: String
     ) : PolyTypeKt()
 }
